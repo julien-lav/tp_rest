@@ -16,7 +16,6 @@ class MastersController extends FOSRestController
 	private $masterRepository; 
 	private $em;  
 
-
 	/**
 	* @Rest\View(serializerGroups={"master"})
 	*/
@@ -56,7 +55,35 @@ class MastersController extends FOSRestController
 	*/
 	public function putMasterAction(Request $request, int $id)
 	{
+		$master = $this->masterRepository->find($id);
 
+		$firstname = $request->get('firstname');
+        $lastname = $request->get('lastname');
+        $email = $request->get('email');
+        $company = $request->get('company');
+
+        if($this->getUser() === $master)
+        {
+        	if(isset($firstname))
+        	{
+           		$master->setFirstname($firstname);
+           	}
+            if(isset($lastname))
+            {
+               $master->setLastname($lastname);
+            }
+            if(isset($email))
+            {
+               $master->setEmail($email);
+            }
+            if(isset($company))
+            {
+               $master->setEmail($company);
+            }
+            $this->em->persist($master);
+            $this->em->flush();
+        }
+        return $this->view($master);
 	}
 
 	/*
@@ -64,7 +91,13 @@ class MastersController extends FOSRestController
 	*/
 	public function deleteMasterAction($id)
 	{
+		$master = $this->masterRepository->find($id);
 
+		if ($this->getUser() === $master)
+		{        
+           $this->em->remove($master);
+           $this->em->flush();
+       }
 	}
 
 }
