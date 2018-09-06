@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Master implements UserInterface
 {
     /**
+     * @Groups("master")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -23,16 +24,19 @@ class Master implements UserInterface
     private $id;
 
     /**
+     * @Groups("master") 
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
+     * @Groups("master") 
      * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
     /**
+     * @Groups("master") 
      * @ORM\Column(type="string", length=255)
      */
     private $email;
@@ -43,12 +47,13 @@ class Master implements UserInterface
     private $apiKey;
 
     /**
+     * @Groups("master") 
      * @ORM\Column(type="simple_array")
      */
     private $roles;
 
-
     /**
+     * @Groups("master") 
      * @ORM\OneToOne(targetEntity="App\Entity\Company", mappedBy="master", cascade={"persist", "remove"})
      */
     private $company;
@@ -58,8 +63,6 @@ class Master implements UserInterface
         $this->roles = array('ROLE_USER');
         $this->apiKey = uniqid('', true);
     }
-
-
 
     public function getId(): ?int
     {

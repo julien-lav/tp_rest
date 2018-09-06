@@ -1,2 +1,215 @@
-# api
+# Symfony Rest API
 
+composer require symfony/options-resolver 
+
+
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Company;
+
+
+
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Company;
+use App\Services\CompanyService;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * @Rest\Route("/api/company", name="api_company_")
+ */
+class CompanyController extends FOSRestController
+{
+
+	/**
+	 * @Rest\Get("", name="index")
+	 *
+	 * @param CompanyService $cs
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function index(CompanyService $cs)
+	{
+		 // $this->denyAccessUnlessGranted('index');
+		$companies = $cs->getAllCompanies();
+
+		$view = $this->view($companies, 200, ['X-Total-Count' => count($companies)]);
+
+		return $this->handleView($view);
+	}
+
+	/**
+	 * @Rest\Post("/new", name="new")
+	 * @param Request $request
+	 * @param CompanyService $cs
+	 * @return Company|string
+	 */
+	public function new(Request $request, CompanyService $cs)
+	{
+		// $this->denyAccessUnlessGranted('new');
+		// TODO Check data integrity
+		$data = json_decode($request->getContent(), true);
+
+		return $cs->addCompany($data);
+	}
+
+	/**
+	 * @Rest\Get("/{id}", name="show", requirements={"id":"\d+"})
+	 * @param Company $company
+	 * @return Company
+	 */
+	public function show(Company $company)
+	{
+		// $this->denyAccessUnlessGranted('view', $company);
+		return $company;
+	}
+
+	/**
+	 * @Rest\Put("/{id}/edit", name="edit", requirements={"id":"\d+"})
+	 * @param Request $request
+	 * @param Company $company
+	 * @param CompanyService $cs
+	 * @return Company
+	 */
+	public function edit(Request $request, Company $company, CompanyService $cs)
+	{
+		// $this->denyAccessUnlessGranted('edit', $company);
+		$data = json_decode($request->getContent(), true);
+
+		return $cs->editCompany($company, $data);
+	}
+
+	/**
+	 * @Rest\Delete("/{id}", name="delete", requirements={"id":"\d+"})
+	 *
+	 * @param Company $company
+	 * @param CompanyService $cs
+	 * @return array
+	 */
+	public function delete(Company $company, CompanyService $cs)
+	{
+		// $this->denyAccessUnlessGranted('edit', $company);
+
+		return $cs->deleteCompany($company);
+	}
+}
+I use service for every controller to seperate logic
+
+<?php
+namespace App\Services;
+
+
+use App\Entity\Company;
+use App\Entity\User;
+use App\Repository\CompanyRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+/**
+ * Class CompanyService
+ * @package App\Services
+ */
+class CompanyService
+{
+
+	/**
+	 * @var EntityManagerInterface
+	 */
+	private $em;
+	/**
+	 * @var CompanyRepository
+	 */
+	private $companyRepository;
+
+	/**
+	 * @var User|null|object
+	 */
+	private $user;
+
+	/**
+	 * CompanyService constructor.
+	 * @param EntityManagerInterface $entityManager
+	 * @param CompanyRepository $repository
+	 */
+	public function __construct(EntityManagerInterface $entityManager, CompanyRepository $repository, TokenStorageInterface $tokenStorage)
+	{
+		$this->em = $entityManager;
+		$this->companyRepository = $repository;
+		$this->user = $entityManager->getRepository(User::class)->findOneBy(['username' => $tokenStorage->getToken()->getUser()->getUsername()]);
+	}
+
+	/**
+	 * @return Company[]
+	 */
+	public function getAllCompanies()
+	{
+		return $this->companyRepository->findAll();
+	}
+
+	/**
+	 * @param array $data
+	 * @return Company
+	 */
+	public function addCompany(array $data)
+	{
+
+		if ($this->companyRepository->findOneByNipOrRegon(['nip' => $data['nip'], 'regon' => $data['regon']]))
+			throw new HttpException(406, 'Company with given NIP and REGON exists');
+
+		$data['user'] = $this->user;
+		$data['accountant'] = $this->user;
+
+		try {
+			$company = new Company($data);
+		} catch (\Exception $e) {
+			throw new HttpException(406, $e->getMessage());
+		}
+		$this->em->persist($company);
+		$this->em->flush();
+
+		return $company;
+	}
+
+	/**
+	 * @param Company $company
+	 * @param array $data
+	 * @return Company
+	 */
+	public function editCompany(Company $company, array $data)
+	{
+		// TODO implement edit entity from given data
+		try {
+			$this->em->flush();
+		} catch (\Exception $e) {
+			throw new  HttpException(406, $e->getMessage());
+		}
+
+		return $company;
+	}
+
+	/**
+	 * @param Company $company
+	 * @return array
+	 */
+	public function deleteCompany(Company $company)
+	{
+		try {
+			$this->em->remove($company);
+			$this->em->flush();
+		} catch (\Exception $e) {
+			throw new HttpException(406, $e->getMessage());
+		}
+		return [];
+	}
+}
+If make:crud with some argument could generate something like above it would be great
+
+In service as user I use
+
+$this->user = $entityManager->getRepository(User::class)->findOneBy(['username' => $tokenStorage->getToken()->getUser()->getUsername()]);
