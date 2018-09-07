@@ -35,6 +35,17 @@ Using postman :
 }
 ```
 
+```json
+{
+        "name": "CNCVEE",
+        "slogan": "C'est nous c'est vous et eux",
+        "phoneNumber": "06 65 68 69 66",
+        "adress": "22 rue des poires",
+        "websiteUrl": "www.url.com",
+        "pictureUrl": "www.url.com"
+}
+```
+
 Content-Type  application/json       <br />
 X-AUTH-TOKEN  5b9144e9ea18a716232073 <br />
 

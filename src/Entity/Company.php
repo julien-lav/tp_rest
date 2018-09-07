@@ -28,31 +28,37 @@ class Company
     private $name;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $slogan;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $phoneNumber;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $adress;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $websiteUrl;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pictureUrl;
 
     /**
+     * @Groups("company") 
      * @ORM\OneToOne(targetEntity="App\Entity\Master", inversedBy="company", cascade={"persist"})
      */
     private $master;
