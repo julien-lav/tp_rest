@@ -24,19 +24,24 @@ class Master implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(min="2")
      * @Groups("master") 
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(min="4")
      * @Groups("master") 
      * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
     /**
-     * @Groups("master") 
+     * @Assert\Email()
+     * @Groups("master")
      * @ORM\Column(type="string", length=255)
      */
     private $email;

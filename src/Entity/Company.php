@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validatot\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -22,18 +22,23 @@ class Company
     private $id;
 
     /**
+     * @Assert\Length(min="2")
      * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(min="5")
      * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $slogan;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 8, max = 12)
      * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
@@ -46,12 +51,14 @@ class Company
     private $adress;
 
     /**
+     * @Assert\Url()
      * @Groups("company") 
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $websiteUrl;
 
     /**
+     * @Assert\Url()
      * @Groups("company") 
      * @ORM\Column(type="string", length=255, nullable=true)
      */

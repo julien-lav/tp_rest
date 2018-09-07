@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CreditcardRepository")
  */
@@ -20,17 +21,23 @@ class Creditcard
 
     /**
      * @Groups("creditcard") 
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @Groups({"creditcard"})
+     * @Assert\NotBlank()
+     * @Assert\Length(min="3")
      * @ORM\Column(type="string", length=255)
      */
     private $creditCardType;
 
     /**
-      * @ORM\Column(type="string", length=255)
+     * @Groups({"creditcard"})
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255)
      */
     private $creditCardNumber;
 
@@ -72,12 +79,12 @@ class Creditcard
         return $this;
     }
 
-    public function getCreditCardNumber(): ?int
+    public function getCreditCardNumber(): ?string
     {
         return $this->creditCardNumber;
     }
 
-    public function setCreditCardNumber(int $creditCardNumber): self
+    public function setCreditCardNumber(string $creditCardNumber): self
     {
         $this->creditCardNumber = $creditCardNumber;
 
