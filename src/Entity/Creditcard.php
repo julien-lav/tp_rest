@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CreditcardRepository")
@@ -34,14 +36,13 @@ class Creditcard
     private $creditCardNumber;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Company", mappedBy="creditcard")
+     * @Assert\NotBlank()
+     * @Groups({"creditcard"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="creditcards")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $company;
 
-    public function __construct()
-    {
-        $this->company = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {

@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validatot\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CompanyRepository")
@@ -47,15 +52,26 @@ class Company
     private $pictureUrl;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Master", inversedBy="company", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Master", inversedBy="company", cascade={"persist"})
      */
     private $master;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Creditcard", inversedBy="company")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\Creditcard", mappedBy="company", cascade={"persist", "remove"})
      */
-    private $creditcard;
+    private $creditcards;
+
+    public function __construct()
+    {
+        $this->creditcards = new ArrayCollection();
+    }
+
+
+    public function setCreditcards(?Creditcards $creditcards): self
+    {
+        $this->creditcards = $creditcards;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -70,7 +86,6 @@ class Company
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -82,7 +97,6 @@ class Company
     public function setSlogan(string $slogan): self
     {
         $this->slogan = $slogan;
-
         return $this;
     }
 
@@ -94,7 +108,6 @@ class Company
     public function setPhoneNumber(string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
-
         return $this;
     }
 
@@ -106,7 +119,6 @@ class Company
     public function setAdress(string $adress): self
     {
         $this->adress = $adress;
-
         return $this;
     }
 
@@ -118,7 +130,6 @@ class Company
     public function setWebsiteUrl(string $websiteUrl): self
     {
         $this->websiteUrl = $websiteUrl;
-
         return $this;
     }
 
@@ -130,7 +141,6 @@ class Company
     public function setPictureUrl(?string $pictureUrl): self
     {
         $this->pictureUrl = $pictureUrl;
-
         return $this;
     }
 
@@ -142,19 +152,7 @@ class Company
     public function setMaster(?Master $master): self
     {
         $this->master = $master;
-
         return $this;
     }
-
-    public function getCreditcard(): ?Creditcard
-    {
-        return $this->creditcard;
-    }
-
-    public function setCreditcard(?Creditcard $creditcard): self
-    {
-        $this->creditcard = $creditcard;
-
-        return $this;
-    }
+  
 }
