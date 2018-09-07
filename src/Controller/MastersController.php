@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\Master;
 use App\Repository\MasterRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use FOS\RestBundle\Controller\Annotations as Rest;
+
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,21 +19,21 @@ class MastersController extends FOSRestController
 	private $masterRepository; 
 	private $em;  
 
-	/**
-	* @Rest\View(serializerGroups={"master"})
-	*/
+
 	public function __construct(MasterRepository $masterRepository, EntityManagerInterface $em)   
 	{
 		$this->masterRepository = $masterRepository;   
 		$this->em = $em;
 	} 
 
+	/**
+	* @Rest\View(serializerGroups={"master"})
+	*/
 	public function getMastersAction()
 	{
 		$masters = $this->masterRepository->findAll();       
 		return $this->view($masters); 
 	}
-
 
 	public function getMasterAction($id)
 	{
@@ -55,6 +58,8 @@ class MastersController extends FOSRestController
 	*/
 	public function putMasterAction(Request $request, int $id)
 	{
+		
+
 		$master = $this->masterRepository->find($id);
 
 		$firstname = $request->get('firstname');
@@ -99,5 +104,5 @@ class MastersController extends FOSRestController
            $this->em->flush();
        }
 	}
-	
+
 }

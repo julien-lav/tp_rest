@@ -22,6 +22,7 @@ class Company
     private $id;
 
     /**
+     * @Groups("company") 
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -58,6 +59,7 @@ class Company
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Creditcard", mappedBy="company", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $creditcards;
 
@@ -66,10 +68,36 @@ class Company
         $this->creditcards = new ArrayCollection();
     }
 
+    public function getCreditcards(): ?array
+    {
+        return $this->creditcards;
+    }
 
-    public function setCreditcards(?Creditcards $creditcards): self
+    /*
+    public function setCreditcards(Creditcards $creditcards): self
     {
         $this->creditcards = $creditcards;
+        return $this;
+    }
+    */
+
+    public function addCreditcard(Creditcard $creditcard): self
+    {
+        if (!$this->creditcard->contains($creditcard)) {
+            $this->creditcard[] = $creditcard;
+            $creditcard->setCompany($this);
+        }
+        return $this;
+    }
+    public function removeCreditcard(Creditcard $creditcard): self
+    {
+        if ($this->creditcard->contains($creditcard)) {
+            $this->creditcard->removeElement($creditcard);
+            // set the owning side to null (unless already changed)
+            if ($creditcard->getCompany() === $this) {
+                $creditcard->setCompany(null);
+            }
+        }
         return $this;
     }
 

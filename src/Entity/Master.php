@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @UniqueEntity("email")
+ * @UniqueEntity("email, company")
  * @ORM\Entity(repositoryClass="App\Repository\MasterRepository")
  */
 class Master implements UserInterface
@@ -54,9 +54,10 @@ class Master implements UserInterface
 
     /**
      * @Groups("master") 
-     * @ORM\OneToOne(targetEntity="App\Entity\Company", mappedBy="master", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Company", inversedBy="master", cascade={"persist", "remove"})
      */
     private $company;
+
 
     public function __construct()
     {
@@ -123,7 +124,6 @@ class Master implements UserInterface
     public function setApiKey(string $apiKey): self
     {
         $this->apiKey = $apiKey;
-
         return $this;
     }
 
@@ -152,10 +152,10 @@ class Master implements UserInterface
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
-        $newMaster = $company === null ? null : $this;
+        /*$newMaster = $company === null ? null : $this;
         if ($newMaster !== $company->getMaster()) {
             $company->setMaster($newMaster);
-        }
+        }*/
         return $this;
     }
 }

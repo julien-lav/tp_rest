@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,6 +19,7 @@ class Creditcard
     private $id;
 
     /**
+     * @Groups("creditcard") 
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -31,7 +30,7 @@ class Creditcard
     private $creditCardType;
 
     /**
-     * @ORM\Column(type="integer")
+      * @ORM\Column(type="string", length=255)
      */
     private $creditCardNumber;
 
@@ -85,14 +84,18 @@ class Creditcard
         return $this;
     }
 
-    /**
-     * @return Collection|Company[]
-     */
-    public function getCompany(): Collection
+    public function getCompany()
     {
         return $this->company;
     }
 
+    public function setcompany($company)
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+/*
     public function addCompany(Company $company): self
     {
         if (!$this->company->contains($company)) {
@@ -115,4 +118,5 @@ class Creditcard
 
         return $this;
     }
+*/
 }
