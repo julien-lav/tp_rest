@@ -59,15 +59,16 @@ class MastersController extends FOSRestController
 	public function putMasterAction(Request $request, int $id)
 	{
 		
+        $currentUser = $this->getUser();
 		$master = $this->masterRepository->find($id);
 
 		$firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
         $email = $request->get('email');
-        $company = $request->get('company');
+        //$company = $request->get('company_id');
 
-        if($this->getUser() === $master)
-        {
+        if($this->getUser()->getId() === $id || in_array('ROLE_ADMIN', $currentUser->getRoles()))
+        { 
         	if(isset($firstname))
         	{
            		$master->setFirstname($firstname);
@@ -80,10 +81,11 @@ class MastersController extends FOSRestController
             {
                $master->setEmail($email);
             }
+            /*
             if(isset($company))
             {
-               $master->setEmail($company);
-            }
+               $master->setCompany($company);
+            }*/
             $this->em->persist($master);
             $this->em->flush();
         }

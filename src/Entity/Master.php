@@ -10,13 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @UniqueEntity("email, company")
+ * @UniqueEntity("email")
  * @ORM\Entity(repositoryClass="App\Repository\MasterRepository")
  */
 class Master implements UserInterface
 {
     /**
      * @Groups("master")
+     * @Groups("company")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -27,6 +28,7 @@ class Master implements UserInterface
      * @Assert\NotBlank()
      * @Assert\Length(min="2")
      * @Groups("master") 
+     * @Groups("creditcard")
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;

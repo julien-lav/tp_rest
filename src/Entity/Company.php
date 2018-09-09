@@ -16,6 +16,9 @@ class Company
 {
     /**
      * @ORM\Id()
+     * @Groups("master")
+     * @Groups("company")
+     * @Groups("creditcard")
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
@@ -23,7 +26,9 @@ class Company
 
     /**
      * @Assert\Length(min="2")
-     * @Groups("company") 
+     * @Groups("master") 
+     * @Groups("company")
+     * @Groups("creditcard")
      * @ORM\Column(type="string", length=255)
      */
     private $name;

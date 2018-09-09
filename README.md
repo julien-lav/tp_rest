@@ -56,3 +56,6 @@ X-AUTH-TOKEN  5b9144e9ea18a716232073 <br />
      * @ORM\OneToOne(targetEntity="App\Entity\Company", inversedBy="company", cascade={"persist", "remove"})
      */
     private $company;
+
+
+php bin/console app:create-admin email firstname lastname

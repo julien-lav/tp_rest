@@ -79,7 +79,7 @@ class CreditcardsController extends FOSRestController
         $credit_card_number = $request->get('credit_card_number');
         $company_id = $request->get('company_id');
 
-        if($currentUser->getCompany() === $creditcard->getCompany())
+        if($currentUser->getCompany() === $creditcard->getCompany() || in_array('ROLE_ADMIN', $currentUser->getRoles()))
         {
         	if(isset($name))
         	{
@@ -91,7 +91,7 @@ class CreditcardsController extends FOSRestController
            	}
            	if(isset($credit_card_number))
         	{
-           		$creditcard->setCreditCardType($credit_card_number);
+           		$creditcard->setCreditCardNumber($credit_card_number);
            	}
            	/*
            	if(isset($company_id))

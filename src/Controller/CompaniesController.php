@@ -69,7 +69,7 @@ class CompaniesController extends FOSRestController
         $website_url = $request->get('website_url');
         $picture_url = $request->get('picture_url');
 
-        if($currentUser->getCompany()->getId() === $id)
+        if($currentUser->getCompany()->getId() === $id  || in_array('ROLE_ADMIN', $currentUser->getRoles()))
         {
         	if(isset($name))
         	{

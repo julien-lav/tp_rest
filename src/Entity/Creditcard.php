@@ -14,13 +14,16 @@ class Creditcard
 {
     /**
      * @ORM\Id()
+     * @Groups("company")
+     * @Groups("creditcard")
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @Groups("creditcard") 
+     * @Groups("creditcard")
+     * @Groups("company")
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
