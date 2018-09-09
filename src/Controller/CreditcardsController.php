@@ -109,5 +109,20 @@ class CreditcardsController extends FOSRestController
         }
 	}
 
+	/*
+	* @Rest\View(serializerGroups={"creditcard"})
+	*/
+	public function deleteCreditcardAction($id)
+	{
+		$currentUser = $this->getUser();
+		$creditcard = $this->creditcardRepository->find($id);
+
+		if ($this->getUser()->getCompany() === $creditcard->getCompany() || in_array('ROLE_ADMIN', $currentUser->getRoles()))
+		{        
+           $this->em->remove($creditcard);
+           $this->em->flush();
+       }
+	}
+
 
 }

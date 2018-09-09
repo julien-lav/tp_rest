@@ -111,4 +111,20 @@ class CompaniesController extends FOSRestController
         }
 	}
 
+  /*
+  * @Rest\View(serializerGroups={"company"})
+  */
+  public function deleteCompanyAction($id)
+  {
+    $currentUser = $this->getUser();
+    $company = $this->companyRepository->find($id);
+
+    if ($this->getUser()->getCompany() === $id || in_array('ROLE_ADMIN', $currentUser->getRoles()))
+    {        
+           $this->em->remove($company);
+           $this->em->flush();
+       }
+  }
+
+
 }

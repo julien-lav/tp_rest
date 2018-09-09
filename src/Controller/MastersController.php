@@ -98,8 +98,9 @@ class MastersController extends FOSRestController
 	public function deleteMasterAction($id)
 	{
 		$master = $this->masterRepository->find($id);
+		$currentUser = $this->getUser();
 
-		if ($this->getUser() === $master)
+		if ($this->getUser()->getId() === $id || in_array('ROLE_ADMIN', $currentUser->getRoles()))
 		{        
            $this->em->remove($master);
            $this->em->flush();

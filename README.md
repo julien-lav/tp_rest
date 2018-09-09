@@ -4,6 +4,9 @@
 Config : 
 Docker // Symfony 4
 
+Listen to :
+http://localhost:83/api/doc
+
 Restart docker
 ```sh
 docker-compose up -d
@@ -59,3 +62,10 @@ X-AUTH-TOKEN  5b9144e9ea18a716232073 <br />
 
 
 php bin/console app:create-admin email firstname lastname
+
+php bin/console hautelook:fixtures:load --purge-with-truncate
+
+composer req asset nelmio/api-doc-bundle
+
+Avec swagger
+http://localhost:83/api/doc
